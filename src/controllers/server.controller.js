@@ -12,11 +12,11 @@ const pool = new Pool({
 });
 
 const registrarUsuario = async (usuario) => {
-    let { email, name, company, password } = usuario;
+    let { email, name, company, password, avatar_url } = usuario;
     const passwordEncriptada = bcrypt.hashSync(password);
     password = passwordEncriptada;
-    const values = [email, name, company, passwordEncriptada];
-    const consulta = "INSERT INTO users values (DEFAULT, $1, $2, $3, $4)";
+    const values = [email, name, company, password, avatar_url];
+    const consulta = "INSERT INTO users values (DEFAULT, $1, $2, $3, $4, $5)";
     await pool.query(consulta, values);
 };
 
