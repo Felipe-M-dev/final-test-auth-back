@@ -1,18 +1,38 @@
 const express = require("express")
 const jwt = require("jsonwebtoken")
-
+const { Pool } = require('pg')
 const { secretKey } = require("./secretKey")
 const cors = require("cors")
 const app = express()
 
 const { port } = require("./src/config/config")
 
-const { registrarUsuario, verificarCredenciales, obtenerDatosDeUsuario, actualizaUsuario } = require("./src/controllers/server.controller")
+const { db } = require("./src/config/config")
+
+const pool = new Pool({
+    host: db.host,
+    user: db.user,
+    password: db.password,
+    database: db.database,
+    allowExitOnIdle: true,
+});
+
+const { registrarUsuario, verificarCredenciales, obtenerDatosDeUsuario, actualizaUsuario, obtenerUsuarios } = require("./src/controllers/server.controller")
 const { checkCredentialsExists, tokenVerification } = require("./src/middleware/middlewares")
 
 app.listen(port, console.log(`SERVER START ON PORT ${port}`))
 app.use(cors())
 app.use(express.json())
+
+app.get("/users", async (req, res) => {
+    try {
+        const users = await pool.query("SELECT * FROM users")
+        res.send(users.rows)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+
+})
 
 app.post("/users", checkCredentialsExists, async (req, res) => {
     try {

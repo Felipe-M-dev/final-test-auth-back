@@ -11,6 +11,11 @@ const pool = new Pool({
     allowExitOnIdle: true,
 });
 
+const obtenerUsuarios = async () => {
+    const consulta = "SELECT * FROM users";
+    await pool.query(consulta)
+}
+
 const registrarUsuario = async (usuario) => {
     let { email, name, company, password, avatar_url } = usuario;
     const passwordEncriptada = bcrypt.hashSync(password);
@@ -77,4 +82,5 @@ module.exports = {
     verificarCredenciales,
     obtenerDatosDeUsuario,
     actualizaUsuario,
+    obtenerUsuarios,
 };
