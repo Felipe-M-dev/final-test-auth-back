@@ -79,3 +79,18 @@ app.get("/users/:email", async (req, res) => {
         res.status(500).send(error)
     }
 })
+
+app.delete("/users/:id", async(req, res) => {
+    try {
+        const { id } = req.params
+        const result = await pool.query(`DELETE FROM users WHERE id=${id}`)
+
+        if (result.rowCount === 0) return res.status(404).json({
+            message: 'Server no encontrado'
+        })
+
+        res.sendStatus(204)
+    } catch (error) {
+        next(error)
+    }
+})
