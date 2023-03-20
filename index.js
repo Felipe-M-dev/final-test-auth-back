@@ -26,7 +26,7 @@ app.use(express.json())
 
 app.get("/users", async (req, res) => {
     try {
-        const users = await pool.query("SELECT * FROM users")
+        const users = await pool.query("SELECT * FROM users WHERE email NOT IN ('admin')")
         res.send(users.rows)
     } catch (error) {
         res.status(500).send(error)
